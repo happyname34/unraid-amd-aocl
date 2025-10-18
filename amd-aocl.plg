@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "amd-aocl">
 <!ENTITY author    "Jason Miller">
-<!ENTITY version   "4.2">
+<!ENTITY version   "5.1">
 <!ENTITY launch    "Settings/AMDaocl">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/happyname34/unraid-amd-aocl/refs/heads/main">
 <!ENTITY pluginURL "&gitURL;/amd-aocl.plg">
@@ -14,12 +14,21 @@
 <CHANGES>
 ###2024.10.18
 - Initial release
-- Install AMD AOCL 4.2
+- Install AMD AOCL 5.1 (GCC build)
+- Note: Requires manual download from AMD website due to EULA acceptance
 </CHANGES>
 
 <!--
 AMD Optimizing CPU Libraries (AOCL) Plugin for Unraid
 This plugin installs AMD's optimized math libraries including BLIS, libFLAME, FFTW, and more.
+
+IMPORTANT: Due to AMD's EULA requirements, you must manually download the AOCL package:
+1. Visit: https://www.amd.com/en/developer/aocl.html
+2. Download: aocl-linux-gcc-5.1.0.tar.gz
+3. Place it in: /boot/config/plugins/amd-aocl/aocl-linux-gcc-5.1.0.tar.gz
+4. Then install this plugin
+
+Alternatively, modify the FILE URL below to point to your own hosted copy of the file.
 -->
 
 <FILE Name="/boot/config/plugins/&name;/&name;.cfg">
@@ -47,12 +56,20 @@ rm -rf /usr/local/aocl
 # Extract and install AMD AOCL
 echo "Installing AMD AOCL..."
 
+# Check if file exists
+if [ ! -f "/tmp/amd-aocl-5.1.0.tar.gz" ]; then
+    echo "ERROR: AOCL archive not found!"
+    echo "Please download aocl-linux-gcc-5.1.0.tar.gz from https://www.amd.com/en/developer/aocl.html"
+    echo "and place it in /boot/config/plugins/amd-aocl/"
+    exit 1
+fi
+
 # Create installation directory
 mkdir -p /usr/local/aocl
 cd /usr/local/aocl
 
 # Extract the archive
-tar -xzf /tmp/amd-aocl-4.2.tar.gz -C /usr/local/aocl --strip-components=1
+tar -xzf /tmp/amd-aocl-5.1.0.tar.gz -C /usr/local/aocl --strip-components=1
 
 # Set up environment variables
 cat > /etc/profile.d/amd-aocl.sh << 'EOF'
@@ -68,7 +85,7 @@ EOF
 chmod +x /etc/profile.d/amd-aocl.sh
 
 # Clean up
-rm -f /tmp/amd-aocl-4.2.tar.gz
+rm -f /tmp/amd-aocl-5.1.0.tar.gz
 
 echo "AMD AOCL installed successfully to /usr/local/aocl"
 echo "Environment variables have been set in /etc/profile.d/amd-aocl.sh"
@@ -89,6 +106,5 @@ echo "AMD AOCL has been removed"
 ]]>
 </INLINE>
 </FILE>
-
 
 </PLUGIN>
