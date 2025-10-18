@@ -53,15 +53,15 @@ rm -rf /usr/local/aocl
 echo "Installing AMD AOCL..."
 
 # Check if file exists
-if [ ! -f "/tmp/amd-aocl-5.1.0.tar.gz" ]; then
-    echo "ERROR: AOCL archive not found at /tmp/amd-aocl-5.1.0.tar.gz"
+if [ ! -f "/boot/config/plugins/amd-aocl/aocl-linux-gcc-5.1.0.tar.gz" ]; then
+    echo "ERROR: AOCL archive not found at /boot/config/plugins/amd-aocl/aocl-linux-gcc-5.1.0.tar.gz"
     echo "Please download aocl-linux-gcc-5.1.0.tar.gz from https://www.amd.com/en/developer/aocl.html"
     echo "and place it in /boot/config/plugins/amd-aocl/aocl-linux-gcc-5.1.0.tar.gz"
     exit 1
 fi
 
 # Verify it's a valid tar.gz file
-if ! tar -tzf /tmp/amd-aocl-5.1.0.tar.gz >/dev/null 2>&1; then
+if ! tar -tzf /boot/config/plugins/amd-aocl/aocl-linux-gcc-5.1.0.tar.gz >/dev/null 2>&1; then
     echo "ERROR: File is not a valid tar.gz archive"
     exit 1
 fi
@@ -71,7 +71,7 @@ mkdir -p /usr/local/aocl
 
 # Extract the archive
 echo "Extracting AOCL archive..."
-if ! tar -xzf /tmp/amd-aocl-5.1.0.tar.gz -C /usr/local/aocl --strip-components=1; then
+if ! tar -xzf /boot/config/plugins/amd-aocl/aocl-linux-gcc-5.1.0.tar.gz -C /usr/local/aocl --strip-components=1; then
     echo "ERROR: Failed to extract archive"
     exit 1
 fi
