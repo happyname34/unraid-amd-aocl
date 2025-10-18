@@ -46,10 +46,6 @@ rm -rf /usr/local/aocl
 </INLINE>
 </FILE>
 
-<FILE Name="/tmp/amd-aocl-4.2.tar.gz">
-<URL>https://www.amd.com/content/dam/amd/en/documents/developer/aocl/4-2/aocl-linux-gcc-4.2.0.tar.gz</URL>
-</FILE>
-
 <FILE Run="/bin/bash">
 <INLINE>
 <![CDATA[
@@ -108,3 +104,4 @@ echo "AMD AOCL has been removed"
 </FILE>
 
 </PLUGIN>
+
