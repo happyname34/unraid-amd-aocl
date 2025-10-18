@@ -1,0 +1,93 @@
+<?xml version='1.0' standalone='yes'?>
+<!DOCTYPE PLUGIN [
+<!ENTITY name      "amd-aocl">
+<!ENTITY author    "Jason Miller">
+<!ENTITY version   "4.2">
+<!ENTITY launch    "Settings/AMDaocl">
+<!ENTITY gitURL    "https://raw.githubusercontent.com/happyname34/unraid-amd-aocl/master">
+<!ENTITY pluginURL "&gitURL;/amd-aocl.plg">
+<!ENTITY md5       "MD5SUM_HERE">
+]>
+
+<PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" min="6.9.0">
+
+<CHANGES>
+###2024.10.18
+- Initial release
+- Install AMD AOCL 4.2
+</CHANGES>
+
+<!--
+AMD Optimizing CPU Libraries (AOCL) Plugin for Unraid
+This plugin installs AMD's optimized math libraries including BLIS, libFLAME, FFTW, and more.
+-->
+
+<FILE Name="/boot/config/plugins/&name;/&name;.cfg">
+<INLINE>
+SERVICE="disable"
+INSTALL_PATH="/usr/local/aocl"
+</INLINE>
+</FILE>
+
+<FILE Run="/bin/bash">
+<INLINE>
+# Remove old versions
+rm -rf /usr/local/aocl-*
+rm -rf /usr/local/aocl
+</INLINE>
+</FILE>
+
+<FILE Name="/tmp/amd-aocl-4.2.tar.gz">
+<URL>https://www.amd.com/content/dam/amd/en/documents/developer/aocl/4-2/aocl-linux-gcc-4.2.0.tar.gz</URL>
+</FILE>
+
+<FILE Run="/bin/bash">
+<INLINE>
+<![CDATA[
+# Extract and install AMD AOCL
+echo "Installing AMD AOCL..."
+
+# Create installation directory
+mkdir -p /usr/local/aocl
+cd /usr/local/aocl
+
+# Extract the archive
+tar -xzf /tmp/amd-aocl-4.2.tar.gz -C /usr/local/aocl --strip-components=1
+
+# Set up environment variables
+cat > /etc/profile.d/amd-aocl.sh << 'EOF'
+# AMD AOCL Environment Variables
+export AOCL_ROOT=/usr/local/aocl
+export PATH=$AOCL_ROOT/bin:$PATH
+export LD_LIBRARY_PATH=$AOCL_ROOT/lib:$LD_LIBRARY_PATH
+export CPATH=$AOCL_ROOT/include:$CPATH
+export LIBRARY_PATH=$AOCL_ROOT/lib:$LIBRARY_PATH
+export PKG_CONFIG_PATH=$AOCL_ROOT/lib/pkgconfig:$PKG_CONFIG_PATH
+EOF
+
+chmod +x /etc/profile.d/amd-aocl.sh
+
+# Clean up
+rm -f /tmp/amd-aocl-4.2.tar.gz
+
+echo "AMD AOCL installed successfully to /usr/local/aocl"
+echo "Environment variables have been set in /etc/profile.d/amd-aocl.sh"
+echo "You may need to restart your session or source the file to use AOCL libraries"
+]]>
+</INLINE>
+</FILE>
+
+<FILE Run="/bin/bash" Method="remove">
+<INLINE>
+<![CDATA[
+# Remove AMD AOCL
+echo "Removing AMD AOCL..."
+rm -rf /usr/local/aocl
+rm -f /etc/profile.d/amd-aocl.sh
+rm -rf /boot/config/plugins/amd-aocl
+echo "AMD AOCL has been removed"
+]]>
+</INLINE>
+</FILE>
+
+</PLUGIN>
