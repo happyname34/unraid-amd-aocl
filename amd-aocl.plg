@@ -4,7 +4,7 @@
 <!ENTITY author    "Jason Miller">
 <!ENTITY version   "4.2">
 <!ENTITY launch    "Settings/AMDaocl">
-<!ENTITY gitURL    "https://raw.githubusercontent.com/happyname34/unraid-amd-aocl/master">
+<!ENTITY gitURL    "https://raw.githubusercontent.com/happyname34/unraid-amd-aocl/refs/heads/main">
 <!ENTITY pluginURL "&gitURL;/amd-aocl.plg">
 <!ENTITY md5       "MD5SUM_HERE">
 ]>
@@ -89,5 +89,6 @@ echo "AMD AOCL has been removed"
 ]]>
 </INLINE>
 </FILE>
+
 
 </PLUGIN>
