@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "amd-aocl">
 <!ENTITY author    "Jason Miller">
-<!ENTITY version   "5.1">
+<!ENTITY version   "5.1.2">
 <!ENTITY launch    "Settings/AMDaocl">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/yourusername/unraid-amd-aocl/refs/heads/main">
 <!ENTITY pluginURL "&gitURL;/amd-aocl.plg">
@@ -110,7 +110,7 @@ rm -rf "$TEMP_DIR"
 cat > /etc/profile.d/amd-aocl.sh << 'EOF'
 # AMD AOCL Environment Variables
 export AOCL_ROOT=/usr/local/aocl
-export PATH=$AOCL_ROOT/bin:$PATH
+export PATH=$AOCL_ROOT/bin:$AOCL_ROOT/benchmarks:$PATH
 export LD_LIBRARY_PATH=$AOCL_ROOT/lib:$LD_LIBRARY_PATH
 export CPATH=$AOCL_ROOT/include:$CPATH
 export LIBRARY_PATH=$AOCL_ROOT/lib:$LIBRARY_PATH
@@ -118,6 +118,15 @@ export PKG_CONFIG_PATH=$AOCL_ROOT/lib/pkgconfig:$PKG_CONFIG_PATH
 EOF
 
 chmod +x /etc/profile.d/amd-aocl.sh
+
+# Make compression bench available globally if it exists
+if [ -f /usr/local/aocl/bin/aocl_compression_bench ]; then
+    ln -sf /usr/local/aocl/bin/aocl_compression_bench /usr/local/bin/aocl_compression_bench
+    echo "aocl_compression_bench installed to /usr/local/bin/"
+elif [ -f /usr/local/aocl/benchmarks/aocl_compression_bench ]; then
+    ln -sf /usr/local/aocl/benchmarks/aocl_compression_bench /usr/local/bin/aocl_compression_bench
+    echo "aocl_compression_bench installed to /usr/local/bin/"
+fi
 
 # Clean up
 rm -f /tmp/amd-aocl-5.1.0.tar.gz
@@ -136,6 +145,7 @@ echo "You may need to restart your session or source the file to use AOCL librar
 echo "Removing AMD AOCL..."
 rm -rf /usr/local/aocl
 rm -f /etc/profile.d/amd-aocl.sh
+rm -f /usr/local/bin/aocl_compression_bench
 rm -rf /boot/config/plugins/amd-aocl
 echo "AMD AOCL has been removed"
 ]]>
