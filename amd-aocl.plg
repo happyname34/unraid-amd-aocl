@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "amd-aocl">
 <!ENTITY author    "Jason Miller">
-<!ENTITY version   "5.1.2">
+<!ENTITY version   "5.1.3">
 <!ENTITY launch    "Settings/AMDaocl">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/yourusername/unraid-amd-aocl/refs/heads/main">
 <!ENTITY pluginURL "&gitURL;/amd-aocl.plg">
@@ -106,15 +106,12 @@ fi
 # Clean up temp directory
 rm -rf "$TEMP_DIR"
 
-# Set up environment variables
+# Set up environment variables by sourcing AMD's config
 cat > /etc/profile.d/amd-aocl.sh << 'EOF'
 # AMD AOCL Environment Variables
-export AOCL_ROOT=/usr/local/aocl
-export PATH=$AOCL_ROOT/bin:$AOCL_ROOT/benchmarks:$PATH
-export LD_LIBRARY_PATH=$AOCL_ROOT/lib:$LD_LIBRARY_PATH
-export CPATH=$AOCL_ROOT/include:$CPATH
-export LIBRARY_PATH=$AOCL_ROOT/lib:$LIBRARY_PATH
-export PKG_CONFIG_PATH=$AOCL_ROOT/lib/pkgconfig:$PKG_CONFIG_PATH
+if [ -f /usr/local/aocl/5.1.0/gcc/amd-libs.cfg ]; then
+    source /usr/local/aocl/5.1.0/gcc/amd-libs.cfg
+fi
 EOF
 
 chmod +x /etc/profile.d/amd-aocl.sh
